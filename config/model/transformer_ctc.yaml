@@ -6,7 +6,8 @@ module:
   mlp_features: [384]
   num_heads: 2
   num_layers: 2
-
+  dropout: 0.1
+  
 datamodule:
   _target_: emg2qwerty.lightning.WindowedEMGDataModule
   window_length: 8000  # 4 sec windows for 2kHz EMG

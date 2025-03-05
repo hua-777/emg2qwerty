@@ -907,7 +907,7 @@ class TransformerCTCModule(pl.LightningModule):
         mlp_features: Sequence[int],
         num_heads: int,
         num_layers: int,
-        #dropout: float,
+        dropout: float,
         optimizer: DictConfig,
         lr_scheduler: DictConfig,
         decoder: DictConfig,
@@ -930,7 +930,7 @@ class TransformerCTCModule(pl.LightningModule):
         # (T, N, num_features)
         self.flatten = nn.Flatten(start_dim=2)
         
-        self.transformer = TransformerDecoder(d_model=num_features, num_heads=num_heads, num_layers=num_layers, dropout=0)
+        self.transformer = TransformerDecoder(d_model=num_features, num_heads=num_heads, num_layers=num_layers, dropout=dropout)
         self.softmax = nn.LogSoftmax(dim=-1)
         
         # Criterion
