@@ -278,3 +278,33 @@ class TDSConvEncoder(nn.Module):
 
     def forward(self, inputs: torch.Tensor) -> torch.Tensor:
         return self.tds_conv_blocks(inputs)  # (T, N, num_features)
+
+
+class PositionalEncodings(nn.Module):
+    def __init__(self, d_model, base=10000):
+        """
+        Inputs
+            d_model - Hidden dimensionality of the input.
+            base - Base for rotary positional encodings.
+        """
+        super().__init__()
+        self.d_model = d_model
+        self.base = base
+
+    def forward(self, x):
+        # x: FloatTensor of shape (bsz, seq_len)
+        # return: pe, FloatTensor of shape (bsz, seq_len, d_model)
+        #   pe[..., i] is the positional encoding for i-th position
+        bsz, seq_len = x.shape
+
+        pe = []
+        for i in range(self.d_model):
+            pe_i = torch.arange(0, seq_len, dtype=torch.float)
+            if i % 2 == 0:
+                pe_i = torch.sin(pe_i / (self.base ** (2*i / self.d_model)))
+            else:
+                pe_i = torch.cos(pe_i / (self.base ** (2*i / self.d_model)))
+            pe.append(pe_i)
+
+        pe = torch.stack(pe, dim=-1)
+        return pe.to(x.device)
