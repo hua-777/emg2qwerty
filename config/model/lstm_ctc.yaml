@@ -1,6 +1,6 @@
 # @package _global_
 module:
-  _target_: emg2qwerty.lightning.LSTMConvCTCModule
+  _target_: emg2qwerty.lightning.LSTMCTCModule
 
   in_features: 528  # freq * channels = (n_fft // 2 + 1) * 16
   mlp_features: [384]
