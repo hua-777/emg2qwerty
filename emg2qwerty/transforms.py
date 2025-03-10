@@ -94,7 +94,15 @@ class Compose:
             data = transform(data)
         return data
 
-
+@dataclass
+class Poisson_Noise: 
+     scale: float = 1.0
+     
+     def __call__(self, tensor: torch.Tensor) -> torch.Tensor:
+         tensor = torch.abs(tensor)
+         poisson_tensor = torch.tensor(np.random.poisson(tensor.numpy() * self.scale)/ self.scale, dtype=torch.float32)
+         return poisson_tensor
+     
 @dataclass
 class RandomBandRotation:
     """Applies band rotation augmentation by shifting the electrode channels

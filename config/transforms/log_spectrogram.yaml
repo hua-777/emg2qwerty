@@ -25,6 +25,10 @@ specaug:
   n_freq_masks: 2
   freq_mask_param: 4
 
+poisson: 
+  _target_: emg2qwerty.transforms.Poisson_Noise
+  scale: 0.5
+
 transforms:
   train:
     - ${to_tensor}
@@ -32,6 +36,7 @@ transforms:
     - ${temporal_jitter}
     - ${logspec}
     - ${specaug}
+    - ${poisson}
 
   val:
     - ${to_tensor}
