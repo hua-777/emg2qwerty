@@ -444,7 +444,7 @@ class RNNConvCTCModule(pl.LightningModule):
 
 
 
-class LSTMConvCTCModule(pl.LightningModule):
+class CNNLSTMCTCModule(pl.LightningModule):
     NUM_BANDS: ClassVar[int] = 2
     ELECTRODE_CHANNELS: ClassVar[int] = 16
 
@@ -948,12 +948,12 @@ class TransformerCTCModule(pl.LightningModule):
             }
         )
 
-    def forward(self, inputs: torch.Tensor) -> torch.Tensor:
+    def forward(self, inputs: torch.Tensor, dropout=True) -> torch.Tensor:
         out = self.spectrogram_norm(inputs)
         out = self.rotation_invar_mlp(out)
         out = self.flatten(out)
         out = rearrange(out, "T N C -> N T C")
-        out = self.transformer(out)
+        out = self.transformer(out, dropout=dropout)
         out = rearrange(out, "N T C -> T N C")
         out = self.softmax(out)
         return out
@@ -966,7 +966,10 @@ class TransformerCTCModule(pl.LightningModule):
         input_lengths = batch["input_lengths"]
         target_lengths = batch["target_lengths"]
         N = len(input_lengths)  # batch_size
-        emissions = self.forward(inputs)
+        if phase == "train":
+            emissions = self.forward(inputs, dropout=True)
+        else:
+            emissions = self.forward(inputs, dropout=False)
 
         # Shrink input lengths by an amount equivalent to the conv encoder's
         # temporal receptive field to compute output activation lengths for CTCLoss.

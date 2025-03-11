@@ -112,15 +112,19 @@ class DecoderBlock(nn.Module):
         self.norm2 = nn.LayerNorm(input_dim)
         self.dropout = nn.Dropout(dropout)
 
-    def forward(self, x, mask=None):
+    def forward(self, x, dropout=True, mask=None):
         # Attention part
         attn_out = self.self_attn(x, mask=mask)
-        x = x + self.dropout(attn_out)
+        if dropout:
+            attn_out = self.dropout(attn_out)
+        x = x + attn_out
         x = self.norm1(x)
 
         # MLP part
         linear_out = self.linear_net(x)
-        x = x + self.dropout(linear_out)
+        if dropout:
+            linear_out = self.dropout(linear_out)
+        x = x + linear_out
         x = self.norm2(x)
 
         return x
@@ -164,9 +168,9 @@ class TransformerDecoder(nn.Module):
             DecoderBlock(d_model, num_heads, dim_feedforward=2 * d_model, dropout=dropout) for _ in range(num_layers)])
         self.lm_head = nn.Linear(d_model, charset_size)#, bias=False)
 
-    def forward(self, tokens, mask=None):
+    def forward(self, tokens, dropout=True, mask=None):
         x = tokens + self.pe(tokens)
         for l in self.layers:
-            x = l(x, mask=mask)
+            x = l(x, dropout=dropout, mask=mask)
         logits = self.lm_head(x)
         return logits
