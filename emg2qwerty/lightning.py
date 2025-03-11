@@ -107,12 +107,12 @@ class WindowedEMGDataModule(pl.LightningDataModule):
             [
                 WindowedEMGDataset(
                     hdf5_path,
-                    transform=self.val_transform,
+                    transform=self.test_transform,
                     window_length=self.window_length,
                     padding=self.padding,
                     jitter=False,
                 )
-                for hdf5_path in self.val_sessions
+                for hdf5_path in self.test_sessions
             ]
         )
     def train_dataloader(self) -> DataLoader:
