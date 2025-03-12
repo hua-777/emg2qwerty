@@ -190,6 +190,16 @@ class TDSConvCTCModule(pl.LightningModule):
                 block_channels=block_channels,
                 kernel_width=kernel_width,
             ),
+            #for the GRU
+            # TDSConvGRUEncoder(
+            #     num_features=num_features,
+            #     block_channels=block_channels,
+            #     kernel_width=kernel_width,
+            #     hidden_size=hidden_size,
+            #     num_layers=num_layers,
+            #     bidirectional=bidirectional, 
+                
+            # ),
             # (T, N, num_classes)
             nn.Linear(num_features, charset().num_classes),
             nn.LogSoftmax(dim=-1),
