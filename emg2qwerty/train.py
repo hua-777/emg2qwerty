@@ -90,7 +90,7 @@ def main(config: DictConfig):
     callback_configs = config.get("callbacks", [])
     callbacks = [instantiate(cfg) for cfg in callback_configs]
 
-    # Initialize trainer
+    # Initialize trainer    
     trainer = pl.Trainer(
         **config.trainer,
         callbacks=callbacks,
