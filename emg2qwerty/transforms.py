@@ -100,7 +100,7 @@ class Poisson_Noise:
      
      def __call__(self, tensor: torch.Tensor) -> torch.Tensor:
          tensor = torch.abs(tensor)
-         poisson_tensor = torch.tensor(np.random.poisson(tensor.numpy() * self.scale)/ self.scale, dtype=torch.float32)
+         poisson_tensor = torch.poisson(tensor * self.scale) / self.scale
          return poisson_tensor
      
 @dataclass
