@@ -1,4 +1,4 @@
-# C147/247 Final Project
+# ECEC247 Final Project
 For our ECEC247 project we implemented various models for the emg2qwerty dataset along with poisson noise data augmentation. Each model/augmentation has a specific yaml file. The models can be trained as follows.
 ```shell
 python -m emg2qwerty.train \
