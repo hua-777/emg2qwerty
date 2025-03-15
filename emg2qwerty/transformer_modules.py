@@ -1,3 +1,4 @@
+# Code adapted from CS263 Homework 2
 from collections.abc import Sequence
 
 import torch
